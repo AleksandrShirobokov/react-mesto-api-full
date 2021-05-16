@@ -1,0 +1,8 @@
+.popup__wrapper {
+    display: flex;
+    margin: 90px 0 0;
+    flex-direction: column;
+    width: max-content;
+    justify-content: center;
+    height: max-content;
+}

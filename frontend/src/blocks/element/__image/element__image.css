@@ -1,0 +1,16 @@
+.element__image {
+    object-fit: cover;
+    width: 100%;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    vertical-align: middle;
+    min-height: 282px;
+    max-height: 282px;
+    cursor: pointer;
+    opacity: 1;
+    transition:.2s ease-in-out;
+}
+
+.element__image:hover {
+    opacity: 0.6;
+}

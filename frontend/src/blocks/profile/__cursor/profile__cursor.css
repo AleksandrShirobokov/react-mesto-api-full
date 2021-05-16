@@ -1,0 +1,18 @@
+.profile__cursor {
+    border-radius: 51%;
+    width: 120px;
+    height: 120px;
+    padding: 0;
+    border: 0;
+    background: none;
+    position: absolute;
+    top: 40px;
+    left: 0;
+    cursor: pointer;
+    transition: background-color .2s ease-in-out;
+    outline: none;
+}
+
+.profile__cursor:hover {
+        background: url('../../../images/EditButton.svg') center no-repeat rgba(0,0,0, .8);
+}

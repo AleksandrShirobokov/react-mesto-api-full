@@ -1,0 +1,9 @@
+.profile__wrapper {
+    position: relative;
+}
+
+@media (max-width: 768px) {
+    .profile__wrapper {
+        margin: 0 auto;
+    }
+}

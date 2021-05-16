@@ -1,0 +1,18 @@
+.profile__image {
+    border-radius: 50%;
+    object-fit: cover;
+    width: 120px;
+    height: 120px;
+    margin: auto;
+    margin-right: 30px;
+    margin-top: 40px;
+    cursor: pointer;
+    opacity: 1;
+    transition:.2s ease-in-out;
+}
+
+@media (max-width: 768px) {
+    .profile__image {
+        margin: 40px auto 0;
+    }
+}

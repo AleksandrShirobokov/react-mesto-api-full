@@ -1,0 +1,8 @@
+.element__item {
+    display: flex;
+    justify-content: space-between;
+    min-height: 80px;
+    align-items: center;
+    max-width: 90%;
+    margin: 0 auto;
+}

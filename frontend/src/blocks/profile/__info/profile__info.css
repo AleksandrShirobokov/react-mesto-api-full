@@ -1,0 +1,30 @@
+.profile__info {
+    display: grid;
+    column-gap: 22px;
+    row-gap: 6px;
+    grid-template-areas: 
+    "title button"
+    "subtitle   .";
+    margin: 56px 0 70px;
+}
+
+@media screen and (max-width: 768px) {
+    .profile__info { 
+        display: grid;
+        column-gap: 22px;
+        row-gap: 6px;
+        grid-template-areas: 
+        "title button"
+        "subtitle   .";
+        margin: 56px 0 70px;
+    }    
+}
+
+@media screen and (max-width: 540px) {
+    .profile__info { 
+        display: grid;
+        margin: 10px 0 28px;
+        column-gap: 1px;
+        row-gap: 1px;
+    }    
+}
