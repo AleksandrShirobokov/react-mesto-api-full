@@ -89,7 +89,7 @@ class Api {
 }    
 
 const api = new Api({
-    url:"http://krasavchik.students.nomoredomains.icu", //localhost:3000
+    url:"https://krasavchik.students.nomoredomains.icu", //localhost:3000
     headers: {
         "Content-type":'application/json',
         "Authorization":`Bearer ${localStorage.getItem('token')}`
