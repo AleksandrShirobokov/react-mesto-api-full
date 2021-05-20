@@ -1,5 +1,5 @@
 
-export const BASE_URL = 'http://api.krasavchik.students.nomoredomains.monster'; //  localhost:3000
+export const BASE_URL = 'https://api.krasavchik.students.nomoredomains.monster'; //  localhost:3000
 //  localhost:3000
 /* export const BASE_URL = 'http://localhost:3000'; */
 
