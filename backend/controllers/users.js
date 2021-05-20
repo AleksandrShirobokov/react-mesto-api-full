@@ -7,16 +7,18 @@ const ConflictError = require('../errors/ConflictError');
 const NotFoundError = require('../errors/NotFoundError');
 const UnauthorizedError = require('../errors/UnauthorizedError');
 
+const { NODE_ENV, JWT_SECRET } = process.env;
+
 module.exports.getUsers = (req, res, next) => {
   User.find({})
-    .then((users) => res.status(200).send({ data: users }))
+    .then((users) => res.status(200).send(users))
     .catch(next);
 };
 
 module.exports.getCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
     .orFail(new Error('Запрашиваемый пользователь не найден'))
-    .then((user) => res.status(200).send({ data: user }))
+    .then((user) => res.status(200).send(user))
     .catch((err) => {
       throw new NotFoundError(err.message);
     })
@@ -26,7 +28,7 @@ module.exports.getCurrentUser = (req, res, next) => {
 module.exports.getUserById = (req, res, next) => {
   User.findById(req.params.id)
     .orFail(new Error('Запрашиваемый пользователь не найден'))
-    .then((user) => res.status(200).send({ data: user }))
+    .then((user) => res.status(200).send(user))
     .catch((err) => {
       throw new NotFoundError(err.message);
     })
@@ -69,7 +71,7 @@ module.exports.patchUser = (req, res, next) => {
     { new: true, runValidation: true },
   )
     .orFail(new Error('Запрашиваемый пользователь не найден'))
-    .then((user) => res.status(200).send({ data: user }))
+    .then((user) => res.status(200).send(user))
     .catch((err) => {
       if (err.message === 'Запрашиваемый пользователь не найден' || err.name === 'Невалидный id') {
         throw new NotFoundError(err.message);
@@ -84,7 +86,7 @@ module.exports.patchAvatar = (req, res, next) => {
   const { avatar } = req.body;
   User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidation: true })
     .orFail(new Error('Запрашиваемый пользователь не найден'))
-    .then((user) => res.status(200).send({ data: user }))
+    .then((user) => res.status(200).send(user))
     .catch((err) => {
       if (err.message === 'Запрашиваемый пользователь не найден' || err.name === 'Невалидный id') {
         throw new NotFoundError(err.message);
@@ -100,7 +102,7 @@ module.exports.login = (req, res, next) => {
   return User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id },
-        'key',
+        NODE_ENV === 'production' ? JWT_SECRET : 'key',
         { expiresIn: '7d' });
       res.status(200).send({ token });
     })

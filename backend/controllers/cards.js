@@ -6,18 +6,20 @@ const NotFoundError = require('../errors/NotFoundError');
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
-    .then((cards) => res.status(200).send({ data: cards }))
+    .then((cards) => res.status(200).send(cards))
     .catch(next);
 };
 
 module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
+  const owner = req.user._id;
+
   Card.create({
     name,
     link,
-    owner: req.user._id,
+    owner,
   })
-    .then((card) => res.status(200).send({ data: card }))
+    .then((card) => res.status(200).send(card))
     .catch((err) => {
       throw new BadRequestError(err.message);
     })
@@ -26,26 +28,28 @@ module.exports.createCard = (req, res, next) => {
 
 module.exports.deleteCard = (req, res, next) => {
   Card.findById(req.params.id)
-    .then((data) => {
-      if (!data) {
+    .then((card) => {
+      if (!card) {
         throw new NotFoundError('Карточка не найдена');
       }
-      if (data.owner.toString() !== req.user._id) {
+      if (card.owner.toString() !== req.user._id) {
         throw new ForbiddenError('У вас нет прав для удаления чужой карточки');
       }
       Card.findByIdAndRemove(req.params.id)
-        .then((card) => res.status(200).send({ card }))
+        .then(() => res.status(200).send({ message: 'Карточка удалена' }))
         .catch(next);
     })
     .catch(next);
 };
 
 module.exports.likeCard = (req, res, next) => {
-  Card.findByIdAndUpdate(req.params.id,
+  Card.findByIdAndUpdate(
+    req.params.id,
     { $addToSet: { likes: req.user._id } },
-    { new: true })
+    { new: true },
+  )
     .orFail(new Error('Карточка не найдена'))
-    .then((card) => res.status(200).send({ data: card }))
+    .then((card) => res.status(200).send(card))
     .catch((err) => {
       throw new NotFoundError(err.message);
     })
@@ -53,11 +57,13 @@ module.exports.likeCard = (req, res, next) => {
 };
 
 module.exports.dislikeCard = (req, res, next) => {
-  Card.findByIdAndUpdate(req.params.id,
+  Card.findByIdAndUpdate(
+    req.params.id,
     { $pull: { likes: req.user._id } },
-    { new: true })
+    { new: true },
+  )
     .orFail(new Error('Карточка не найдена'))
-    .then((card) => res.status(200).send({ data: card }))
+    .then((card) => res.status(200).send(card))
     .catch((err) => {
       throw new NotFoundError(err.message);
     })

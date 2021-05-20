@@ -62,15 +62,15 @@ class Api {
 
     }
 
-    changeLikeCardStatus(cardId, isLiked) {
+    changeLikeCardStatus(userId, isLiked) {
         if(isLiked)
-            {return fetch(`${this._url}/cards/likes/${cardId}`, {
+            {return fetch(`${this._url}/cards/${userId}/likes`, {
                 method:'PUT',
                 headers: this._headers
             })
             .then(this._getResponseData)}
         else {
-            return fetch(`${this._url}/cards/likes/${cardId}`, {
+            return fetch(`${this._url}/cards/${userId}/likes`, {
                 method: 'DELETE',
                 headers: this._headers
             })
@@ -89,9 +89,11 @@ class Api {
 }    
 
 const api = new Api({
-    url:"https://api.krasavchik.students.nomoredomains.monster", // localhost:3000
+    url:"http://api.krasavchik.students.nomoredomains.monster", // localhost:3000
+    /* url:"http://localhost:3000", */
     headers: {
-        "Content-type":'application/json',
+        Accept: "application/json",
+        "Content-type":"application/json",
         "Authorization":`Bearer ${localStorage.getItem('token')}`
     } 
 }) 

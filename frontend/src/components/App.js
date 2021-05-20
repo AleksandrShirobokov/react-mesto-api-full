@@ -34,17 +34,19 @@ function App() {
     const history = useHistory();
 
     useEffect(() => {
-        Promise.all([
-            api.getInitialCards(),
+        if(loggedIn) {
             api.getUserInfoMe()
-        ])
-        .then((data) => { 
-            const [dataCard, dataUser] = data;
-            setCards(dataCard)
-            setCurrentUser(dataUser);
-        })
-        .catch(err=>console.log(err))
-    },[])
+            .then(res => {
+               setCurrentUser(res);
+            })
+            .catch(err=>console.log(err))    
+
+            api.getInitialCards()
+            .then(res => {
+                setCards(res);
+            })                 
+        }   
+    },[loggedIn])
 
     function handleLogin() {
         setLoggedIn(true);
@@ -100,7 +102,7 @@ function App() {
     
     function handleCardLike(card) {
         // Снова проверяем, есть ли уже лайк на этой карточке
-        const isLiked = card.likes.some(i => i._id === currentUser._id);
+        const isLiked = card.likes.some(i => i === currentUser._id);
         // Отправляем запрос в API и получаем обновлённые данные карточки
         api.changeLikeCardStatus(card._id, !isLiked)
         .then((newCard) => {
@@ -188,15 +190,14 @@ function App() {
     }
                 // TOKEN //
     React.useEffect(() => {
-        function handleTokenCheck() {
             const token = localStorage.getItem('token');
             if(token) {
                 auth.getContent(token)
                 .then((res) => {
-                    if(res) {
-                      history.push('/')
+                    if(res) { 
                       handleLogin();
-                      setEmail(res.data.email)  
+                      history.push('/')
+                      setEmail(res.email) 
                     }
                 })
                 .catch((err) => {
@@ -208,9 +209,7 @@ function App() {
                     }
                 })
             }
-    }
-    handleTokenCheck();
-    },[history, loggedIn])
+    },[history])
 
     return (
     <>
