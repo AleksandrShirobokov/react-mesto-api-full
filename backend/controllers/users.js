@@ -9,14 +9,14 @@ const UnauthorizedError = require('../errors/UnauthorizedError');
 
 module.exports.getUsers = (req, res, next) => {
   User.find({})
-    .then((users) => res.status(200).send({ data: users }))
+    .then((users) => res.status(200).send(users))
     .catch(next);
 };
 
 module.exports.getCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
     .orFail(new Error('Запрашиваемый пользователь не найден'))
-    .then((user) => res.status(200).send({ data: user }))
+    .then((user) => res.status(200).send(user))
     .catch((err) => {
       throw new NotFoundError(err.message);
     })
@@ -26,7 +26,7 @@ module.exports.getCurrentUser = (req, res, next) => {
 module.exports.getUserById = (req, res, next) => {
   User.findById(req.params.id)
     .orFail(new Error('Запрашиваемый пользователь не найден'))
-    .then((user) => res.status(200).send({ data: user }))
+    .then((user) => res.status(200).send(user))
     .catch((err) => {
       throw new NotFoundError(err.message);
     })
@@ -69,7 +69,7 @@ module.exports.patchUser = (req, res, next) => {
     { new: true, runValidation: true },
   )
     .orFail(new Error('Запрашиваемый пользователь не найден'))
-    .then((user) => res.status(200).send({ data: user }))
+    .then((user) => res.status(200).send(user))
     .catch((err) => {
       if (err.message === 'Запрашиваемый пользователь не найден' || err.name === 'Невалидный id') {
         throw new NotFoundError(err.message);
@@ -84,7 +84,7 @@ module.exports.patchAvatar = (req, res, next) => {
   const { avatar } = req.body;
   User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidation: true })
     .orFail(new Error('Запрашиваемый пользователь не найден'))
-    .then((user) => res.status(200).send({ data: user }))
+    .then((user) => res.status(200).send(user))
     .catch((err) => {
       if (err.message === 'Запрашиваемый пользователь не найден' || err.name === 'Невалидный id') {
         throw new NotFoundError(err.message);

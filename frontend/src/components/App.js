@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React from 'react'
 import Header from './Header' 
 import Main from './Main'
 import Footer from './Footer'
@@ -30,21 +30,28 @@ function App() {
     const [email, setEmail] = React.useState('');
     const [resSuccess, setResSuccess] = React.useState(false)
     const [message, setMessage] = React.useState('');
-
     const history = useHistory();
 
-    useEffect(() => {
-        Promise.all([
-            api.getInitialCards(),
-            api.getUserInfoMe()
-        ])
-        .then((data) => { 
-            const [dataCard, dataUser] = data;
-            setCards(dataCard)
-            setCurrentUser(dataUser);
-        })
-        .catch(err=>console.log(err))
-    },[])
+    React.useEffect(() => {   
+        if(loggedIn) {
+            const token = localStorage.getItem('token');
+            api.getUserInfoMe(token)
+            .then((res) => {
+                if(res) {
+                    console.log(res.token)
+                    setCurrentUser(res);
+                }
+              
+            })
+            .catch((err) => console.log(err));
+            
+            api.getInitialCards(token)
+            .then((res) => {
+              setCards(res);
+            })
+            .catch((err) => console.log(err));
+            }
+        }, [loggedIn]);
 
     function handleLogin() {
         setLoggedIn(true);
@@ -100,7 +107,7 @@ function App() {
     
     function handleCardLike(card) {
         // Снова проверяем, есть ли уже лайк на этой карточке
-        const isLiked = card.likes.some(i => i._id === currentUser._id);
+        const isLiked = card.likes.some(i => i === currentUser._id);
         // Отправляем запрос в API и получаем обновлённые данные карточки
         api.changeLikeCardStatus(card._id, !isLiked)
         .then((newCard) => {
@@ -170,11 +177,12 @@ function App() {
     }
                  // LOGIN //
     function handleLoginSubmit(password, email) {
-        auth.authorize(password, email)
+        return auth.authorize(password, email)
+
         .then((data) => {
             if(data.token) {
-                    handleLogin();
-                    history.push('/');  
+                handleLogin(); 
+                history.push('/');  
             }
         })
         .catch((err) => {
@@ -186,17 +194,17 @@ function App() {
             }    
         })
     }
-                // TOKEN //
+
     React.useEffect(() => {
-        function handleTokenCheck() {
-            const token = localStorage.getItem('token');
+        function tokenChek() {
+            const token = localStorage.getItem("token");
             if(token) {
                 auth.getContent(token)
                 .then((res) => {
-                    if(res) {
-                      history.push('/')
-                      handleLogin();
-                      setEmail(res.data.email)  
+                    if(res) {  
+                        setEmail(res.email);
+                        handleLogin();
+                        history.push('/');  
                     }
                 })
                 .catch((err) => {
@@ -208,10 +216,9 @@ function App() {
                     }
                 })
             }
-    }
-    handleTokenCheck();
-    },[history, loggedIn])
-
+    } tokenChek();
+    }, [loggedIn, history])
+                                                   
     return (
     <>
         <div className="page">

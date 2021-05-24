@@ -62,15 +62,15 @@ class Api {
 
     }
 
-    changeLikeCardStatus(cardId, isLiked) {
+    changeLikeCardStatus(id, isLiked) {
         if(isLiked)
-            {return fetch(`${this._url}/cards/likes/${cardId}`, {
+            {return fetch(`${this._url}/cards/${id}/likes`, {
                 method:'PUT',
                 headers: this._headers
             })
             .then(this._getResponseData)}
         else {
-            return fetch(`${this._url}/cards/likes/${cardId}`, {
+            return fetch(`${this._url}/cards/${id}/likes`, {
                 method: 'DELETE',
                 headers: this._headers
             })
@@ -78,21 +78,28 @@ class Api {
         }    
     }
 
-    delCard(cardId) {
-        return fetch(`${this._url}/cards/${cardId}`, {
+    delCard(id) {
+        return fetch(`${this._url}/cards/${id}`, {
             method:'DELETE',
             headers: this._headers
         })
         .then(this._getResponseData)
 
     }
+
+    updateHeaders() {
+        this._headers = {
+          'Content-Type': 'application/json',
+          authorization: `Bearer ${localStorage.getItem('token')}`,
+        }
+      }
 }    
 
 const api = new Api({
-    url:"https://api.krasavchik.students.nomoredomains.monster", // localhost:3000
+    url:"http://localhost:3000", // localhost:3000
     headers: {
         "Content-type":'application/json',
-        "Authorization":`Bearer ${localStorage.getItem('token')}`
+        authorization:`Bearer ${localStorage.getItem('token')}`
     } 
 }) 
 

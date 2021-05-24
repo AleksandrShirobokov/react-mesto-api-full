@@ -6,7 +6,7 @@ const NotFoundError = require('../errors/NotFoundError');
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
-    .then((cards) => res.status(200).send({ data: cards }))
+    .then((cards) => res.status(200).send(cards))
     .catch(next);
 };
 
@@ -17,7 +17,7 @@ module.exports.createCard = (req, res, next) => {
     link,
     owner: req.user._id,
   })
-    .then((card) => res.status(200).send({ data: card }))
+    .then((card) => res.status(200).send(card))
     .catch((err) => {
       throw new BadRequestError(err.message);
     })
@@ -34,7 +34,7 @@ module.exports.deleteCard = (req, res, next) => {
         throw new ForbiddenError('У вас нет прав для удаления чужой карточки');
       }
       Card.findByIdAndRemove(req.params.id)
-        .then((card) => res.status(200).send({ card }))
+        .then(() => res.status(200).send({ message: 'Карточка удалена' }))
         .catch(next);
     })
     .catch(next);
@@ -45,7 +45,7 @@ module.exports.likeCard = (req, res, next) => {
     { $addToSet: { likes: req.user._id } },
     { new: true })
     .orFail(new Error('Карточка не найдена'))
-    .then((card) => res.status(200).send({ data: card }))
+    .then((card) => res.status(200).send(card))
     .catch((err) => {
       throw new NotFoundError(err.message);
     })
@@ -57,7 +57,7 @@ module.exports.dislikeCard = (req, res, next) => {
     { $pull: { likes: req.user._id } },
     { new: true })
     .orFail(new Error('Карточка не найдена'))
-    .then((card) => res.status(200).send({ data: card }))
+    .then((card) => res.status(200).send(card))
     .catch((err) => {
       throw new NotFoundError(err.message);
     })

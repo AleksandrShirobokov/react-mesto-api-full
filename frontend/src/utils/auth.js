@@ -1,4 +1,8 @@
-export const BASE_URL = 'https://api.krasavchik.students.nomoredomains.monster'; //  localhost:3000
+import api from '../utils/api';
+
+export const BASE_URL = 'http://localhost:3000'; //  localhost:3000
+
+
 
  const getResponse = (res) => {
     if(res.ok) {
@@ -28,8 +32,9 @@ export const authorize = (password, email) => {
     })
     .then(getResponse)
     .then((res) => {
-        if(res) {
+        if(res.token) {
             localStorage.setItem('token', res.token);
+            api.updateHeaders();
             return res;
         }
     })
@@ -40,8 +45,10 @@ export const getContent = (token) => {
         method: 'GET',
         headers: {
             "Content-Type": "application/json",
-            "Authorization" : `Bearer ${token}`
+            authorization : `Bearer ${token}`
         }
     })
-    .then(getResponse)
+    .then((res) => {
+        return res.json()
+    })
 }
