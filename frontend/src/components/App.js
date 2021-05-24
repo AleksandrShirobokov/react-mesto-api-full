@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React from 'react'
 import Header from './Header' 
 import Main from './Main'
 import Footer from './Footer'
@@ -33,20 +33,29 @@ function App() {
 
     const history = useHistory();
 
-    useEffect(() => {
+    React.useEffect(() => {
         if(loggedIn) {
-            api.getUserInfoMe()
-            .then(res => {
-               setCurrentUser(res);
+            const token = localStorage.getItem('token');
+            api
+            .getUserInfoMe(token)
+            .then((res) => {
+                if(res) {
+                    setCurrentUser(res);
+                }
+                    
             })
-            .catch(err=>console.log(err))    
-
-            api.getInitialCards()
-            .then(res => {
-                setCards(res);
-            })                 
+            .catch(err=>console.log(err));
+                
+            api
+            .getInitialCards(token) 
+            .then((res) => {
+                if(res) {
+                    setCards(res);
+                }   
+            })
+            .catch(err=>console.log(err));                         
         }   
-    },[loggedIn])
+    }, [loggedIn])
 
     function handleLogin() {
         setLoggedIn(true);
@@ -148,12 +157,16 @@ function App() {
 
     function signOut() {
         localStorage.removeItem('token');
-        history.push('/sign-in');
         setLoggedIn(false);
+        history.push('/sign-in');
     }
+
+    
+
                 // REGISTRATION //
     function handleRegisterSubmit(password, email) {
-        auth.register(password, email)
+        auth
+        .register(password, email)
         .then((res) => {
             if(res) {
                 history.push('/sign-in')
@@ -172,11 +185,12 @@ function App() {
     }
                  // LOGIN //
     function handleLoginSubmit(password, email) {
-        auth.authorize(password, email)
+        auth
+        .authorize(password, email)
         .then((data) => {
             if(data.token) {
-                    handleLogin();
-                    history.push('/');  
+                handleLogin();
+                history.push('/'); 
             }
         })
         .catch((err) => {
@@ -188,28 +202,33 @@ function App() {
             }    
         })
     }
-                // TOKEN //
+
+    // Проверяем TOKEN //
     React.useEffect(() => {
-            const token = localStorage.getItem('token');
-            if(token) {
-                auth.getContent(token)
-                .then((res) => {
-                    if(res) { 
-                      handleLogin();
-                      history.push('/')
-                      setEmail(res.email) 
-                    }
-                })
-                .catch((err) => {
-                    if(err === 401) {
-                        console.log('*Токен не передан или передан не в том формате')
-                    }
-                    if(err === 401) {
-                        console.log('*Переданный токен некорректен')
-                    }
-                })
-            }
-    },[history])
+        function checkToken() {
+            const token = localStorage.getItem('token'); 
+                if(token) {
+                    auth
+                    .getContent(token)
+                    .then((res) => {
+                        if(res) { 
+                            setEmail(res.email)
+                            handleLogin();
+                            history.push('/')
+                        }
+                    })
+                    .catch((err) => {
+                        if(err === 401) {
+                            console.log('*Токен не передан или передан не в том формате')
+                        }
+                        if(err === 401) {
+                            console.log('*Переданный токен некорректен')
+                        }
+                    })
+                }
+        } checkToken();
+    }, [ loggedIn, history ]);
+
 
     return (
     <>

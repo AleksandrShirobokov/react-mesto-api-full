@@ -6,7 +6,7 @@ const { idValidation, userInfoValidation, userAvatarValidation } = require('../m
 
 router.get('/', getUsers);
 router.get('/me', getCurrentUser);
-router.get('/:userId', idValidation, getUserById);
+router.get('/:id', idValidation, getUserById);
 router.patch('/me', userInfoValidation, patchUser);
 router.patch('/me/avatar', userAvatarValidation, patchAvatar);
 

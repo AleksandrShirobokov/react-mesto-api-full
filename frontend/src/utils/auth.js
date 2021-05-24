@@ -1,13 +1,16 @@
 
-export const BASE_URL = 'https://api.krasavchik.students.nomoredomains.monster'; //  localhost:3000
+/* export const BASE_URL = 'https://api.krasavchik.students.nomoredomains.monster'; */ //  localhost:3000
+
+import api from "../utils/api";
+
 //  localhost:3000
-/* export const BASE_URL = 'http://localhost:3000'; */
+export const BASE_URL = 'http://localhost:3000';
 
  const getResponse = (res) => {
-    if(res.ok) {
-        return res.json();
+    if(!res.ok) {
+        return Promise.reject(res.status);
     }
-    return Promise.reject(res.status);
+    return res.json();
 }
 
 export const register = (password, email) => {
@@ -30,10 +33,11 @@ export const authorize = (password, email) => {
         body: JSON.stringify({password, email})
     })
     .then(getResponse)
-    .then((res) => {
-        if(res.token) {   
-            localStorage.setItem('token', res.token); 
-            return res;
+    .then((data) => {
+        if(data.token) {   
+            localStorage.setItem('token', data.token);
+            api.updateToken(); 
+            return data;
         }
     })
 }
@@ -43,8 +47,8 @@ export const getContent = (token) => {
         method: 'GET',
         headers: {
             "Content-Type": "application/json",
-            "Authorization" : `Bearer ${token}`
+            authorization : `Bearer ${token}`
         }
     })
-    .then(getResponse)
+    .then((res) => res.json())
 }

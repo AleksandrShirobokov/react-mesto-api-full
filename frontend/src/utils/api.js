@@ -14,7 +14,7 @@ class Api {
     getInitialCards() {
         return fetch(`${this._url}/cards`, {
             method:"GET",
-            headers: this._headers
+            headers: this._headers,
         })
         .then(this._getResponseData)
     }
@@ -33,10 +33,11 @@ class Api {
 
     getUserInfoMe() {
         return fetch(`${this._url}/users/me`, {
-            headers: this._headers
+            headers: this._headers,
         })
         .then(this._getResponseData)
     }
+
 
     changeUserInfo(data) {
         return fetch(`${this._url}/users/me`, {
@@ -62,39 +63,46 @@ class Api {
 
     }
 
-    changeLikeCardStatus(userId, isLiked) {
+    changeLikeCardStatus(id, isLiked) {
         if(isLiked)
-            {return fetch(`${this._url}/cards/${userId}/likes`, {
+            {return fetch(`${this._url}/cards/${id}/likes`, {
                 method:'PUT',
-                headers: this._headers
+            headers: this._headers,
             })
             .then(this._getResponseData)}
         else {
-            return fetch(`${this._url}/cards/${userId}/likes`, {
+            return fetch(`${this._url}/cards/${id}/likes`, {
                 method: 'DELETE',
-                headers: this._headers
+                headers: this._headers,
             })
             .then(this._getResponseData)
         }    
     }
 
-    delCard(cardId) {
-        return fetch(`${this._url}/cards/${cardId}`, {
+    delCard(id) {
+        return fetch(`${this._url}/cards/${id}`, {
             method:'DELETE',
-            headers: this._headers
+            headers: this._headers,
         })
         .then(this._getResponseData)
 
     }
+
+    updateToken() {
+        this._headers = {
+            "Content-type":"application/json",
+            authorization : `Bearer ${localStorage.getItem('token')}`
+        } 
+    }
 }    
 
 const api = new Api({
-    url:"https://api.krasavchik.students.nomoredomains.monster", // localhost:3000
-    /* url:"http://localhost:3000", */
+    /* url:"https://api.krasavchik.students.nomoredomains.monster", */ // localhost:3000
+    url:"http://localhost:3000",
     headers: {
-        Accept: "application/json",
+        /* Accept: "application/json", */
         "Content-type":"application/json",
-        "Authorization":`Bearer ${localStorage.getItem('token')}`
+        authorization: `Bearer ${localStorage.getItem('token')}}`
     } 
 }) 
 
