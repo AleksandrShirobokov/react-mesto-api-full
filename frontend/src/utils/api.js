@@ -97,8 +97,8 @@ class Api {
 }    
 
 const api = new Api({
-    /* url:"https://api.krasavchik.students.nomoredomains.monster", */ // localhost:3000
-    url:"http://localhost:3000",
+    url:"https://api.krasavchik.students.nomoredomains.monster", // localhost:3000
+    /* url:"http://localhost:3000", */
     headers: {
         /* Accept: "application/json", */
         "Content-type":"application/json",

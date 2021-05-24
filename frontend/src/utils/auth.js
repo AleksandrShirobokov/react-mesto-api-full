@@ -1,10 +1,9 @@
 
-/* export const BASE_URL = 'https://api.krasavchik.students.nomoredomains.monster'; */ //  localhost:3000
-
 import api from "../utils/api";
 
 //  localhost:3000
-export const BASE_URL = 'http://localhost:3000';
+/* export const BASE_URL = 'http://localhost:3000'; */
+export const BASE_URL = 'https://api.krasavchik.students.nomoredomains.monster'; //  localhost:3000
 
  const getResponse = (res) => {
     if(!res.ok) {
