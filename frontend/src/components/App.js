@@ -38,7 +38,7 @@ function App() {
             api.getUserInfoMe(token)
             .then((res) => {
                 if(res) {
-                    console.log(res.token)
+                    /* console.log(res.token) */
                     setCurrentUser(res);
                 }
               
