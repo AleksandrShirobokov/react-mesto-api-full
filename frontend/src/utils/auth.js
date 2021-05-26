@@ -1,8 +1,6 @@
 import api from '../utils/api';
 
-export const BASE_URL = 'https://api.krasavchik.students.nomoredomains.monster'; //  localhost:3000
-
-
+export const BASE_URL = 'https://api.krasavchik.students.nomoredomains.monster';
 
  const getResponse = (res) => {
     if(res.ok) {
